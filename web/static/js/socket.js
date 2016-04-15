@@ -2,6 +2,7 @@ import {Socket} from "phoenix"
 
 let me
 let players = {}
+let gravatarImages = {}
 let messagesContainer = $("#messages")
 let canvas = $("#canvas")[0]
 let ctx = canvas.getContext("2d")
@@ -24,11 +25,27 @@ function drawBoard() {
 function drawPlayer(player) {
   let x = player.x * playerWidth
   let y = player.y * playerHeight
+  let gravatarImage = gravatarImages[player.gravatar_url]
 
-  ctx.fillStyle = "blue"
-  ctx.fillRect(x, y, playerWidth, playerHeight)
-  ctx.strokeStyle = "white"
-  ctx.strokeRect(x, y, playerWidth, playerHeight)
+  // Draws the player sprite
+  if (gravatarImage) {
+    ctx.drawImage(gravatarImage, x, y);
+  } else {
+    // until we have a gravatar image, we use a square player sprite
+    ctx.fillStyle = "blue"
+    ctx.fillRect(x, y, playerWidth, playerHeight)
+    ctx.strokeStyle = "white"
+    ctx.strokeRect(x, y, playerWidth, playerHeight)
+
+    // Background image
+    let image = new Image();
+    image.onload = function () {
+      // When we have finished loading the image, we store it in the image cache
+      gravatarImages[player.gravatar_url] = image
+      drawBoard()
+    };
+    image.src = player.gravatar_url
+  }
 }
 
 function setupChannelMessageHandlers(channel) {

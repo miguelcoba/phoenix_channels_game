@@ -16,7 +16,8 @@ defmodule PhoenixChannelsGame.PlayerChannel do
 
   def handle_info({:after_join, _message}, socket) do
     player_id = socket.assigns.player_id
-    player = %{id: player_id}
+    gravatar_url = socket.assigns.gravatar_url
+    player = %{id: player_id, gravatar_url: gravatar_url}
     player = GameState.put_player(player)
     broadcast! socket, "player:joined", %{player: player}
     {:noreply, socket}

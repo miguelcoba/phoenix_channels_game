@@ -1,6 +1,8 @@
 defmodule PhoenixChannelsGame.UserSocket do
   use Phoenix.Socket
 
+  import Exgravatar
+
   ## Channels
   channel "players:*", PhoenixChannelsGame.PlayerChannel
 
@@ -20,6 +22,7 @@ defmodule PhoenixChannelsGame.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(%{"user_id" => email}, socket) do
+    socket = assign(socket, :gravatar_url, gravatar_url(email, s: PhoenixChannelsGame.GameState.player_size))
     socket = assign(socket, :player_id, email)
     {:ok, socket}
   end
