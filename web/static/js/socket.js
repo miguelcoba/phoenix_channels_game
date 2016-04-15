@@ -52,6 +52,10 @@ function drawPlayer(player) {
     };
     image.src = player.gravatar_url
   }
+
+  // draws the player score
+  ctx.fillStyle = "black"
+  ctx.fillText(player.kills, x + playerWidth + 2, y + playerHeight)
 }
 
 function setupChannelMessageHandlers(channel) {

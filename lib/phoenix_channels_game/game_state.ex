@@ -26,6 +26,7 @@ defmodule PhoenixChannelsGame.GameState do
     player =
       player
         |> reset_player_position
+        |> Map.put(:kills, 0)
     Agent.update(__MODULE__, &Map.put_new(&1, player.id, player))
     player
   end
@@ -92,6 +93,7 @@ defmodule PhoenixChannelsGame.GameState do
       nil ->
         {player, nil}
       killed_player ->
+        player = increment_kill_count(player)
         killed_player = respawn_killed_player(killed_player)
         {player, killed_player}
     end
@@ -106,6 +108,10 @@ defmodule PhoenixChannelsGame.GameState do
   # Test if two different players have the same coordinates in board
   defp players_in_same_position(player, otherPlayer) do
     player.id != otherPlayer.id && player.x == otherPlayer.x && player.y == otherPlayer.y
+  end
+
+  defp increment_kill_count(player) do
+    player |> Map.update!(:kills, &(&1 + 1)) |> update_player
   end
 
   # Resets the player position to the initial position
