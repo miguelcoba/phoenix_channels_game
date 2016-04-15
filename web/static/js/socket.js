@@ -10,10 +10,16 @@ let w = $("#canvas").width()
 let h = $("#canvas").height()
 let playerWidth = 20
 let playerHeight = 20
+let playerWasKilled = 0
 
 // draw board
 function drawBoard() {
-  ctx.fillStyle = "white"
+  let boardColor = "white"
+  if (playerWasKilled > 0) {
+    boardColor = "red"
+    playerWasKilled--
+  }
+  ctx.fillStyle = boardColor
   ctx.fillRect(0, 0, w, h)
 
   for (let id in players) {
@@ -59,6 +65,15 @@ function setupChannelMessageHandlers(channel) {
 
   // Player changed position in board
   channel.on("player:position", ({player: player}) => {
+    players[player.id] = player
+    drawBoard()
+  })
+
+  // Player was killed
+  channel.on("player:player_killed", ({player: player}) => {
+    if (player.id === me) { // we were killed
+      playerWasKilled = 3  // how many times we'll change the canvas color
+    }
     players[player.id] = player
     drawBoard()
   })

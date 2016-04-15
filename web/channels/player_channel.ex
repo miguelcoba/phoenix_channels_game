@@ -25,8 +25,13 @@ defmodule PhoenixChannelsGame.PlayerChannel do
 
   def handle_in("player:move", %{"direction" => direction}, socket) do
     player_id = socket.assigns.player_id
-    player = GameState.move_player(player_id, direction)
-    broadcast! socket, "player:position", %{player: player}
+    case GameState.move_player_and_detect_collision(player_id, direction) do
+      {player, nil} ->
+        broadcast! socket, "player:position", %{player: player}
+      {player, killed_player} ->
+        broadcast! socket, "player:position", %{player: player}
+        broadcast! socket, "player:player_killed", %{player: killed_player}
+    end
     {:noreply, socket}
   end
 end
