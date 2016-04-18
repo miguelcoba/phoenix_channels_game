@@ -32,14 +32,14 @@ defmodule PhoenixChannelsGame.GameState do
   end
 
   @doc """
-    Retrive a player from the map
+    Retrieve a player from the map
   """
   def get_player(player_id) do
     Agent.get(__MODULE__, &Map.get(&1, player_id))
   end
 
   @doc """
-    Update a player information in the map
+    Update the player information in the map
   """
   def update_player(player) do
     Agent.update(__MODULE__, &Map.put(&1, player.id, player))
@@ -100,7 +100,7 @@ defmodule PhoenixChannelsGame.GameState do
   end
 
   # Detects if the player current position is the same as some other player
-  # Returns nil if no collision or the player map if one found
+  # Returns nil if no collision or the player map if a collision was found
   defp detect_collision(player) do
     players |> Map.values |> Enum.find(fn p -> players_in_same_position(p, player) end)
   end
