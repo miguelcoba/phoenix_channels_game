@@ -2,6 +2,8 @@
 
 This is a simple game created with Phoenix Channels
 
+Check the walktrough at: https://medium.com/@miguel.coba/building-a-game-with-phoenix-channels-a3e6b390cfcc
+
 To start your Phoenix app:
 
   * Install dependencies with `mix deps.get`
